@@ -52,7 +52,7 @@ describe.only('Book API', () => {
 
     it('Should PUT an existing book', (done) => {
         const bookId = 1;
-        const updatedBook = {id: bookId, title: "Updated Test Book", author: "Updated Test Author"};
+        const updatedBook = { id: bookId, title: "Updated Test Book", author: "Updated Test Author" };
         chai.request(server)
             .put(`/books/${bookId}`)
             .send(updatedBook)
@@ -65,7 +65,31 @@ describe.only('Book API', () => {
             });
     });
 
+    it('Should return 404 when trying to GET, PUT or DELETE a non-existing book', (done) => {
+        chai.request(server)
+            .get('/books/9999')
+            .end((err, res) => {
+                expect(res).to.have.status(404);
+            });
 
+        chai.request(server)
+            .put('/books/9999')
+            .send({ id: "9999", title: "Non-existing Book", author: "Non-existing Author" })
+            .end((err, res) => {
+                expect(res).to.have.status(404);
+            })
+
+        chai.request(server)
+            .delete('/books/9999')
+            .end((err, res) => {
+                expect(res).to.have.status(404);
+                done();
+            });
+
+    });
 });
+
+
+
 
 //npx mocha api.test.js

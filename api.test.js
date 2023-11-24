@@ -1,6 +1,6 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const app = require('./server');
+const server = require('./server');
 const expect = chai.expect;
 //let {expect} = require('chai');
 
@@ -11,7 +11,7 @@ describe.only('Book API', () => {
 
     it('Should POST a book', (done) => {
         const book = { id: "1", title: "Test Book", author: "Test Author" };
-        chai.request(app)
+        chai.request(server)
             .post('/books')
             .send(book)
             .end((err, res) => {
@@ -26,7 +26,7 @@ describe.only('Book API', () => {
     });
 
     it('Should GET all book', (done) => {
-        chai.request(app)
+        chai.request(server)
             .get('/books')
             .end((err, res) => {
                 expect(res).to.have.status(200);
@@ -34,6 +34,23 @@ describe.only('Book API', () => {
                 done();
             });
     });
+
+    it('Should GET a single book', (done) => {
+        const bookId = 1;
+
+        chai.request(server)
+            .get(`/books/${bookId}`)
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.a('object');
+                expect(res.body).to.have.property('id');
+                expect(res.body).to.have.property('title');
+                expect(res.body).to.have.property('author');
+                done();
+            });
+    });
+
+
 });
 
 //npx mocha api.test.js

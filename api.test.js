@@ -65,6 +65,17 @@ describe.only('Book API', () => {
             });
     });
 
+        
+    it('Should DELETE a single book', (done) => {
+        const bookId = 1;
+        chai.request(server)
+            .delete(`/books/${bookId}`)
+            .end((err, res) => {
+                expect(res).to.have.status(404);
+                done();
+            });
+    });
+
     it('Should return 404 when trying to GET, PUT or DELETE a non-existing book', (done) => {
         chai.request(server)
             .get('/books/9999')
